@@ -1,4 +1,4 @@
-package test.scala
+package maxel
 
 import scalaprops._
 import scalaprops.Gen._

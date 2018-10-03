@@ -104,7 +104,7 @@ object Maxel {
   /** The empty maxel with no pixels. Its size is zero. */
   def empty[A]: Maxel[A] = Maxel(MSet.empty)
 
-  def maxelRealm[A:Eq]: Realm[Maxel[A]] = new Realm[Maxel[A]] {
+  implicit def maxelRealm[A:Eq]: Realm[Maxel[A]] = new Realm[Maxel[A]] {
     def join(a: Maxel[A], b: Maxel[A]) = a ∪ b
     def meet(a: Maxel[A], b: Maxel[A]) = a ∩ b
     val zero = empty[A]
