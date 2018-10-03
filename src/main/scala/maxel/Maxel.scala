@@ -96,6 +96,10 @@ object Maxel {
   def fromSeq[A](s: Seq[Pixel[A]]): Maxel[A] =
     Maxel(MSet.multisetFromSeq(s))
 
+  def singleton[A](p: Pixel[A]): Maxel[A] = Maxel(fromSeq(Seq(p)))
+
+  def e[A](row: A, col: A): Maxel[A] = singleton(Pixel(row, col))
+
   /** The empty maxel with no pixels. Its size is zero. */
   def empty[A]: Maxel[A] = Maxel(MSet.empty)
 
