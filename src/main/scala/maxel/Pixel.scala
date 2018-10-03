@@ -34,7 +34,7 @@ case class Pixel[A](row: A, col: A) {
 
   /** Two pixels are equal if they agree on both the row and column. */
   def ===(p: Pixel[A])(implicit E: Eq[A]): Boolean =
-    row === p.row && col === p.col
+    columnCollinear(p) && rowCollinear(p)
 }
 
 object Pixel {
