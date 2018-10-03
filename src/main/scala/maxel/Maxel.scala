@@ -94,9 +94,10 @@ case class Maxel[A](rep: MSet[Natural, Pixel[A]]) {
 
 object Maxel {
   def fromSeq[A](s: Seq[Pixel[A]]): Maxel[A] =
+
     Maxel(MSet.multisetFromSeq(s))
 
-  def singleton[A](p: Pixel[A]): Maxel[A] = Maxel(fromSeq(Seq(p)))
+  def singleton[A](p: Pixel[A]): Maxel[A] = fromSeq(Seq(p))
 
   def e[A](row: A, col: A): Maxel[A] = singleton(Pixel(row, col))
 

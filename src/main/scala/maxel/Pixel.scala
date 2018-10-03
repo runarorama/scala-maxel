@@ -6,7 +6,7 @@ import spire.syntax.all._
 /** A pixel is a pair of values. */
 case class Pixel[A](row: A, col: A) {
 
-  /** `x.transpose.row == x.column && x.transpose.column == x.row` */
+  /** `x.transpose.row == x.col && x.transpose.col == x.row` */
   def transpose: Pixel[A] = Pixel(col, row)
 
   /** A pixel `p` is diagonal exactly when `p.transpose == p` */
@@ -19,7 +19,8 @@ case class Pixel[A](row: A, col: A) {
   def rowCollinear(p: Pixel[A])(implicit E: Eq[A]): Boolean = row === p.row
 
   /** Two pixels are collinear when they agree on the row or column. */
-  def collinear(p: Pixel[A])(implicit E: Eq[A]): Boolean = row === p.row
+  def collinear(p: Pixel[A])(implicit E: Eq[A]): Boolean =
+    rowCollinear(p) || columnCollinear(p)
 
   /**
    * Category multiplication on pixels. The composite pixel `p *? q` exists

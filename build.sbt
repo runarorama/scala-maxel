@@ -13,5 +13,5 @@ lazy val buildAll = (project in file(".")).dependsOn(mset)
 name := "Maxel"
 libraryDependencies += "org.typelevel" %% "spire" % "0.16.0"
 scalapropsSettings
-scalapropsVersion := "0.5.4"
+scalapropsVersion := "0.5.5"
 
