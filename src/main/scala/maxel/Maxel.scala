@@ -1,30 +1,53 @@
 package maxel
 
 import mset._
-import spire.math.Natural
 import spire.algebra.Eq
 import spire.algebra.Order
 import spire.syntax.all._
+import spire.math._
 import spire.compat._
 import Realm.NaturalRealm
 
-/** A maxel is a multiset of pixels. */
+/**
+ * Maxels are a generalization of matrices. A matrix can be viewed as an image
+ * (a kind of colimit) of a maxel. Matrices and maxels are in an adjunction,
+ * where a map from maxels to matrices is a right adjoint.
+ *
+ * A maxel is represented by a multiset of pixels.
+ */
 case class Maxel[A](rep: MSet[Natural, Pixel[A]]) {
 
   /** The size of a maxel is its number of pixels. */
   def size = rep.size
 
-  /** The frame of a maxel is the set of its pixels. */
+  /**
+   * The [[frame]] of a maxel is the set of its pixels, also known as its
+   * [[support]].
+   */
   def frame: Set[Pixel[A]] = rep.toSet
 
   /**
+   * The [[support]] of a maxel is the set of its pixels, also known as its
+   * [[frame]].
+   */
+  def support: Set[Pixel[A]] = frame
+
+  /**
    * The extent of a maxel is the largest row and column of any of its pixels,
-   * respectively. This is a partial functor from maxel space into pixel space.
-   * The extent of the empty maxel is undefined.
+   * respectively. The extent of the empty maxel is undefined.
    */
   def extent(implicit O: Order[A]): Option[Pixel[A]] = {
     val ps = frame
     if (isEmpty) None else Some(Pixel(ps.maxBy(_.row).row, ps.maxBy(_.col).col))
+  }
+
+  /**
+   * The intent of a maxel is the smallest row and column of any of its pixels,
+   * respectively. The intent of the empty maxel is undefined.
+   */
+  def intent(implicit O: Order[A]): Option[Pixel[A]] = {
+    val ps = frame
+    if (isEmpty) None else Some(Pixel(ps.minBy(_.row).row, ps.minBy(_.col).col))
   }
 
   /** A maxel is diagonal when all its pixels are diagonal. */
@@ -90,11 +113,33 @@ case class Maxel[A](rep: MSet[Natural, Pixel[A]]) {
 
   /** The product of two maxels is the product of all their pixels. */
   def *(m: Maxel[A])(implicit E: Eq[A]): Maxel[A] = multiply(m)
+
+  /** Get the value at a particular pixel. */
+  def screen(p: Pixel[A]): Natural = rep(p)
+
+  /** Get a 2D display of the maxel, starting at pixel 1,1 */
+  def display(implicit I: Integral[A], O: Order[A]): List[List[Natural]] =
+    extent match {
+      case Some(Pixel(rows, cols)) =>
+        List.range(I.one, I.plus(rows, I.one)).map { row =>
+          List.range(I.one, I.plus(cols, I.one)).map { col =>
+            screen(Pixel(row, col))
+          }
+        }
+      case None => List()
+    }
+
+  /** Get a string representation of the 2D display of the maxel. */
+  def render(implicit I: Integral[A], O: Order[A]): String =
+    display.map(_.mkString("\t")).mkString("\n")
+
+  /** The cross of a pixel is all the pixels in its row and column. */
+  def cross(a: Pixel[A])(implicit E: Eq[A]): Maxel[A] =
+    Maxel(rep.filter(p => p.col === a.col || p.row === a.row))
 }
 
 object Maxel {
   def fromSeq[A](s: Seq[Pixel[A]]): Maxel[A] =
-
     Maxel(MSet.multisetFromSeq(s))
 
   def singleton[A](p: Pixel[A]): Maxel[A] = fromSeq(Seq(p))

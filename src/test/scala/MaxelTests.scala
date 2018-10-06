@@ -51,6 +51,15 @@ object MaxelTests extends Scalaprops {
 
   val realm = realmLaws[Maxel[Int]]("maxel realm")
 
+  val multiplicativeSemigroup =
+    forAll { (a: Maxel[Int], b: Maxel[Int], c: Maxel[Int]) =>
+      a * (b * c) === (a * b) * c
+    }
+
+  val multiplicationDistributes =
+    forAll { (a: Maxel[Int], b: Maxel[Int], c: Maxel[Int]) =>
+      a * (b + c) === ((a * b) + (a * c))
+    }
 }
 
 
