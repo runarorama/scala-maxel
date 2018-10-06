@@ -70,6 +70,11 @@ object MaxelTests extends Scalaprops {
     (e(i,i) * a === a) === (a.cross.row subsetOf Set(i)) &&
     (a * e(i,i) === a) === (a.cross.col subsetOf Set(i))
   }
+
+  val partialIdentities = forAll { (m: Maxel[Int], j: Set[Int]) =>
+    val ej = partialIdentity(j)
+    ((ej * m).cross.row subsetOf j) && ((m * ej).cross.col subsetOf j)
+  }
 }
 
 
