@@ -11,6 +11,7 @@ object MaxelTests extends Scalaprops {
   import spire.syntax.all._
   import spire.std.char._
   import spire.std.int._
+  import spire.std.boolean._
   import spire.std.option._
   import mset.Realm
   import Maxel._
@@ -64,6 +65,11 @@ object MaxelTests extends Scalaprops {
     forAll { (a: Maxel[Int], b: Maxel[Int], c: Maxel[Int]) =>
       a * (b + c) === ((a * b) + (a * c))
     }
+
+  val multiplicativeIdentity = forAll { (a: Maxel[Int], i: Int) =>
+    (e(i,i) * a === a) === (a.cross.row subsetOf Set(i)) &&
+    (a * e(i,i) === a) === (a.cross.col subsetOf Set(i))
+  }
 }
 
 
