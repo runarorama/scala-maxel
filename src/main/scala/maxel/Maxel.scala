@@ -174,5 +174,8 @@ object Maxel {
     def plus(a: Maxel[A], b: Maxel[A]) = a + b
     override def eqv(a: Maxel[A], b: Maxel[A]) = a === b
   }
+
+  def partialIdentity[A](s: Set[A]): Maxel[A] =
+    fromSeq(s.toSeq.map(Pixel.diagonal))
 }
 
