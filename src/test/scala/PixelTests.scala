@@ -31,7 +31,7 @@ object PixelTests extends Scalaprops {
   val category = Properties.properties("category")(
     "composition" -> forAll { (a: Char, b: Char, c: Char) =>
       Pixel(a,b) *? Pixel(b,c) === Option(Pixel(a,c)) &&
-      Pixel(a,a) *? Pixel(b,b) === Option.empty[Pixel[Char]]
+      (Pixel(a,a) *? Pixel(b,b) === Option.empty[Pixel[Char]]) == (a != b)
     },
     "associativity" ->
       forAll { (p: Pixel[Char], q: Pixel[Char], r: Pixel[Char]) =>

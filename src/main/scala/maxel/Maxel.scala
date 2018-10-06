@@ -101,6 +101,12 @@ case class Maxel[A](rep: MSet[Natural, Pixel[A]]) {
   /** An alias for `add`. */
   def +(m: Maxel[A]): Maxel[A] = add(m)
 
+  /**
+   * Subtract one maxel from another. Subtracts the appearances of a pixel in
+   * the second maxel from its appearances in the first.
+   */
+  def subtract(m: Maxel[A]): Maxel[A] = Maxel(rep difference m.rep)
+
   /** Scales a maxel by duplicating all its pixels. */
   def scale(n: Natural): Maxel[A] = Maxel(rep scale n)
 
@@ -133,9 +139,21 @@ case class Maxel[A](rep: MSet[Natural, Pixel[A]]) {
   def render(implicit I: Integral[A], O: Order[A]): String =
     display.map(_.mkString("\t")).mkString("\n")
 
-  /** The cross of a pixel is all the pixels in its row and column. */
+  /**
+   * Get all the pixels in the cross of another pixel. The cross of a pixel
+   * is all pixels in its row and column.
+   */
   def cross(a: Pixel[A])(implicit E: Eq[A]): Maxel[A] =
     Maxel(rep.filter(p => p.col === a.col || p.row === a.row))
+
+  /**
+   * The cross of a maxel is sets of rows and columns, that is, the set of
+   * crosses of its pixels.
+   */
+  def cross: Pixel[Set[A]] = rep.foldLeft(Pixel(Set[A](), Set[A]())) {
+    case (Pixel(rows, cols), (Pixel(row, col), _)) =>
+      Pixel(rows + row, cols + col)
+  }
 }
 
 object Maxel {

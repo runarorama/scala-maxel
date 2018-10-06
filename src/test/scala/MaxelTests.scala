@@ -23,6 +23,10 @@ object MaxelTests extends Scalaprops {
     m.transpose.extent === m.extent.map(_.transpose)
   }
 
+  val intentFunctorality = forAll { m: Maxel[Int] =>
+    m.transpose.intent === m.intent.map(_.transpose)
+  }
+
   val constructiveDiagonality = forAll { (m: List[Int]) =>
     fromSeq(m.map(Pixel.diagonal)).isDiagonal
   }
