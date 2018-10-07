@@ -201,9 +201,28 @@ case class Maxel[I,A](rep: MSet[A, Pixel[I]]) {
     case (Pixel(rows, cols), (Pixel(row, col), _)) =>
       Pixel(rows + row, cols + col)
   }
+
+  import Maxel._
+
+  def row(i: I)(implicit I: Eq[I],
+                         A: MRealm[A],
+                         M: MultiplicativeMonoid[A]): Vexel[I,A] =
+    rep.filter(p => p.row === i).map(_.col)
+
+  def col(i: I)(implicit I: Eq[I],
+                         A: MRealm[A],
+                         M: MultiplicativeMonoid[A]): Vexel[I,A] =
+    rep.filter(p => p.col === i).map(_.row)
 }
 
 object Maxel {
+  /**
+   * Vexels generalize vectors. A vexel is a multiset of points in `I`.
+   * The value of a dimension of a vexel is in `A`. We can truncate the vexel
+   * to get a vector in some `I`-indexed space.
+   */
+  type Vexel[I,A] = MSet[A,I]
+
   def fromSeq[I,A](s: Seq[Pixel[I]])(
                    implicit M: MultiplicativeMonoid[A],
                             A: AdditiveMonoid[A],

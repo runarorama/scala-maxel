@@ -16,6 +16,7 @@ object MaxelTests extends Scalaprops {
   import mset.Realm
   import Maxel._
   import PixelTests._
+  import mset._
 
   implicit def genMaxel[A:Gen:Eq:MultiplicativeMonoid:AdditiveMonoid,
                         I:Gen:Eq]: Gen[Maxel[I,A]] =
@@ -75,6 +76,14 @@ object MaxelTests extends Scalaprops {
   val partialIdentities = forAll { (m: Maxel[Int,Int], j: Set[Int]) =>
     val ej = partialIdentity[Int,Int](j)
     ((ej * m).cross.row subsetOf j) && ((m * ej).cross.col subsetOf j)
+  }
+
+  val colVexel = forAll { (m: Maxel[Int,Int], j: Int) =>
+    m.col(j) === m.rep.flatMap(x => MSet.fromSeq(x.leftBy(j).toSeq))
+  }
+
+  val rowVexel = forAll { (m: Maxel[Int,Int], j: Int) =>
+    m.row(j) === m.rep.flatMap(x => MSet.fromSeq(x.rightBy(j).toSeq))
   }
 }
 

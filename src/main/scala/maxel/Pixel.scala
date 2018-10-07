@@ -35,6 +35,20 @@ case class Pixel[A](row: A, col: A) {
   /** Two pixels are equal if they agree on both the row and column. */
   def ===(p: Pixel[A])(implicit E: Eq[A]): Boolean =
     columnCollinear(p) && rowCollinear(p)
+
+  /**
+   * Multiply by a singleton on the right. If `k` equals this pixel's row,
+   * returns this pixel's column.
+   */
+  def rightBy(k: A)(implicit E: Eq[A]): Option[A] =
+    if (k === row) Some(col) else None
+
+  /**
+   * Multiply by a singleton on the left. If `k` equals this pixel's column,
+   * returns this pixel's row.
+   */
+  def leftBy(k: A)(implicit E: Eq[A]): Option[A] =
+    if (k === col) Some(row) else None
 }
 
 object Pixel {
