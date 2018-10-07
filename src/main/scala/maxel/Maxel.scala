@@ -20,7 +20,7 @@ import  spire.syntax.all._
 case class Maxel[I,A](rep: MSet[A, Pixel[I]]) {
   import MSet._
 
-  /** The size of a maxel is its number of pixels. */
+  /** The size of a maxel is the total value of its pixels. */
   def size(implicit M: AdditiveMonoid[A]): A = rep.size
 
   /**
